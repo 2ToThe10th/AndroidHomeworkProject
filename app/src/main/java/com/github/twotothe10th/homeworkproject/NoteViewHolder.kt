@@ -1,6 +1,5 @@
 package com.github.twotothe10th.homeworkproject
 
-import android.net.Uri
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -9,22 +8,20 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 
 class NoteViewHolder(noteView: View, noteListener: NoteAdapter.Listener?) : ViewHolder(noteView) {
     private var id: Int = 0
-    private val descriptionView: TextView
-    private val dateView: TextView
-    private val imageView: ImageView
+    private val descriptionView: TextView = noteView.findViewById(R.id.item_description)
+    private val dateView: TextView = noteView.findViewById(R.id.item_date)
+    private val imageView: ImageView = noteView.findViewById(R.id.item_image)
 
     fun bind(note: Note) {
         descriptionView.text = note.description
         dateView.text = note.date
         id = note.id
         imageView.setImageURI(note.imageUri)
+        imageView.transitionName = "image_list$id"
     }
 
     init {
-        noteView.setOnClickListener { noteListener?.onNoteClick(id) }
-        descriptionView = noteView.findViewById(R.id.item_description)
         descriptionView.maxLines = descriptionView.layoutParams.height / descriptionView.lineHeight
-        dateView = noteView.findViewById(R.id.item_date)
-        imageView = noteView.findViewById(R.id.item_image)
+        noteView.setOnClickListener { noteListener?.onNoteClick(id, imageView) }
     }
 }

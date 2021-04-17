@@ -1,6 +1,8 @@
 package com.github.twotothe10th.homeworkproject
 
 import android.os.Bundle
+import android.transition.AutoTransition
+import android.transition.Fade
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,7 +40,8 @@ class NoteDetailedFragment : Fragment() {
         val note = (activity?.application as App).noteRepository.get(id)
         val description = view.findViewById<TextView>(R.id.detailed_description)
         description.text = note?.description
-        val photo = view.findViewById<ImageView>(R.id.detailed_photo)
-        photo.setImageURI(note?.imageUri)
+        val imageView = view.findViewById<ImageView>(R.id.detailed_photo)
+        imageView.setImageURI(note?.imageUri)
+        imageView.transitionName = "image_detailed$id"
     }
 }

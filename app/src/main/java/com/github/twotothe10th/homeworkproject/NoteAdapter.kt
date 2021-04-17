@@ -1,13 +1,13 @@
 package com.github.twotothe10th.homeworkproject
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 
 class NoteAdapter : RecyclerView.Adapter<NoteViewHolder>() {
     interface Listener {
-        fun onNoteClick(id: Int)
+        fun onNoteClick(id: Int, imageView: ImageView)
     }
 
     private var noteList = emptyList<Note>()
