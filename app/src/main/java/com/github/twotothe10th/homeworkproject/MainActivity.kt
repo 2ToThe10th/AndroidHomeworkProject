@@ -14,22 +14,22 @@ class MainActivity : AppCompatActivity(), NoteAdapter.Listener {
             supportFragmentManager.popBackStack()
         }
 
-        val fragment = NoteDetailedFragment.newInstance(id)
+        val noteDetailedFragment = NoteDetailedFragment.newInstance(id)
 
         val transaction = supportFragmentManager
             .beginTransaction()
 
         if (!resources.getBoolean(R.bool.is_pad)) {
-            fragment.sharedElementEnterTransition = DetailsTransition()
-            fragment.sharedElementReturnTransition = DetailsTransition()
+            noteDetailedFragment.sharedElementEnterTransition = DetailsTransition()
+            noteDetailedFragment.sharedElementReturnTransition = DetailsTransition()
             transaction.addSharedElement(imageView, "image_detailed$id")
         }
 
-        fragment.enterTransition = Fade()
+        noteDetailedFragment.enterTransition = Fade()
 
         transaction.replace(
             detailedFragmentId,
-            fragment,
+            noteDetailedFragment,
             NoteDetailedFragment.TAG
         )
             .addToBackStack(null)
@@ -47,13 +47,13 @@ class MainActivity : AppCompatActivity(), NoteAdapter.Listener {
             R.id.main_container
         }
 
-        val fragment = NoteListFragment.newInstance()
-        fragment.exitTransition = Fade()
+        val noteListFragment = NoteListFragment.newInstance()
+        noteListFragment.exitTransition = Fade()
 
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.main_container, fragment, NoteListFragment.TAG)
+                .replace(R.id.main_container, noteListFragment, NoteListFragment.TAG)
                 .addToBackStack(null)
                 .commit()
         }
