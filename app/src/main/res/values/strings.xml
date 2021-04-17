@@ -1,6 +1,4 @@
 <resources>
     <string name="app_name">Notes</string>
-    <string name="description">Aerondight is a silver sword used in fighting monsters, and is relatively ineffective against humans. It can be received only in Chapter IV and can neither be bought nor sold. In The Paths of Destiny, according to a quest phase titled "The Sword", the blade is exceptional: "light, sharp as a razor, and fits the hand neatly". In the same entry, it is said that the blade "has a destiny of its own. Time will tell what that destiny is". Lady of the Lake knights Geralt after he fulfills her wishes, and gives him this blade along with the words: "Take this sword as a sign of my favor. Once the blade of a great warrior, it lay in the depths for ages, awaiting your arrival."</string>
-    <string name="sword_name">Aerondight</string>
-    <string name="publication_date">2021.20.03</string>
+    <string name="photo_description">photo of note</string>
 </resources>
