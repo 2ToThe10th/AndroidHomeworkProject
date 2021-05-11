@@ -9,5 +9,5 @@ import androidx.room.PrimaryKey
 data class Note(
     @PrimaryKey(autoGenerate = true) val id: Long,
     val description: String,
-    val date: String,
+    val date: Long,
     @ColumnInfo(name = "image_uri") val imageUri: String)

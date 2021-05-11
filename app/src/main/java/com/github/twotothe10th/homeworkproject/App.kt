@@ -6,7 +6,7 @@ import com.github.twotothe10th.homeworkproject.db.AppDatabase
 import com.github.twotothe10th.homeworkproject.db.NoteRepository
 
 class App : Application() {
-    var noteRepository: NoteRepository = NoteRepository()
+    val noteRepository: NoteRepository = NoteRepository()
 
     override fun onCreate() {
         super.onCreate()
