@@ -43,10 +43,21 @@ class NoteListFragment : Fragment() {
         recyclerView.recycledViewPool.setMaxRecycledViews(0, 5)
 
         noteListAdapter.setListener(activity as MainActivity)
-        noteListAdapter.setNoteList((activity?.application as App).noteRepository.noteList)
         recyclerView.adapter = noteListAdapter
 
         spSizeWas = resources.displayMetrics.scaledDensity
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        (activity?.application as App).noteRepository.addUpdateListener(noteListAdapter)
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        (activity?.application as App).noteRepository.removeUpdateListener(noteListAdapter)
     }
 
     override fun onResume() {

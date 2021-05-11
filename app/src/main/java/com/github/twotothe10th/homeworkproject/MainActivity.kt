@@ -9,7 +9,7 @@ class MainActivity : AppCompatActivity(), NoteAdapter.Listener {
 
     private var detailedFragmentId: Int = 0
 
-    override fun onNoteClick(id: Int, imageView: ImageView) {
+    override fun onNoteClick(id: Long, imageView: ImageView) {
         if (supportFragmentManager.findFragmentByTag(NoteDetailedFragment.TAG) != null) {
             supportFragmentManager.popBackStack()
         }
