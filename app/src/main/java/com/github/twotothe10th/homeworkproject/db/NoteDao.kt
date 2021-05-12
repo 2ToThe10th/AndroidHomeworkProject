@@ -8,9 +8,9 @@ import androidx.room.Query
 @Dao
 interface NoteDao {
     @Query("SELECT count(*) FROM note")
-    fun getNoteCount(): Long
+    suspend fun getNoteCount(): Long
 
-    fun IsEmpty() = getNoteCount() == 0L
+    suspend fun IsEmpty() = getNoteCount() == 0L
 
     class NoteToInsert(
         val description: String,
@@ -19,12 +19,12 @@ interface NoteDao {
     )
 
     @Insert(entity = Note::class)
-    fun insert(note: NoteToInsert): Long
+    suspend fun insert(note: NoteToInsert): Long
 
-    fun insert(description: String, date: Long, imageUri: String): Note {
+    suspend fun insert(description: String, date: Long, imageUri: String): Note {
         return Note(insert(NoteToInsert(description, date, imageUri)), description, date, imageUri)
     }
 
     @Query("SELECT * from note")
-    fun getAll(): List<Note>
+    suspend fun getAll(): List<Note>
 }

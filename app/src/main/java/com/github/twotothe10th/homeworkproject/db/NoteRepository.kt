@@ -1,11 +1,12 @@
 package com.github.twotothe10th.homeworkproject.db
 
+import kotlinx.coroutines.*
 import kotlin.collections.ArrayList
 
 class NoteRepository {
 
     interface UpdateListener {
-        fun setNoteList(noteList: List<Note>)
+        suspend fun setNoteList(noteList: List<Note>)
     }
 
     private val subscribersOnUpdate = ArrayList<UpdateListener>()
@@ -95,42 +96,58 @@ class NoteRepository {
         )
     )
     private var noteDao: NoteDao? = null
-
-    fun setDatabase(db: AppDatabase) {
-        noteDao = db.noteDao()
-
-        if (noteDao!!.IsEmpty()) {
-            for (note in defaultNoteList) {
-                insertNote(note.description, note.date, note.imageUri)
-            }
-        }
-
-        noteDao!!.getAll().map { note -> noteDict[note.id] = note }
-        onUpdate()
-    }
-
+    private val coroutineScope = MainScope() + CoroutineName("NoteRepositoryCoroutine")
     private val noteList: List<Note>
         get() = noteDict.values.toList()
 
+    fun setDatabase(db: AppDatabase) {
+
+        coroutineScope.launch {
+            noteDict.clear()
+            noteDao = db.noteDao()
+
+            withContext(Dispatchers.IO) {
+                if (noteDao!!.IsEmpty()) {
+                    for (note in defaultNoteList) {
+                        justInsertNote(note.description, note.date, note.imageUri)
+                    }
+                }
+                noteDao!!.getAll()
+            }.map { note -> noteDict[note.id] = note }
+
+            onUpdate()
+        }
+    }
+
     fun addUpdateListener(updateListener: UpdateListener) {
-        subscribersOnUpdate.add(updateListener)
-        updateListener.setNoteList(noteList)
+        coroutineScope.launch {
+            subscribersOnUpdate.add(updateListener)
+            updateListener.setNoteList(noteList)
+        }
     }
 
     fun removeUpdateListener(updateListener: UpdateListener) {
         subscribersOnUpdate.remove(updateListener)
     }
 
-    private fun onUpdate() {
-        for (subscriber in subscribersOnUpdate) {
-            subscriber.setNoteList(noteList)
+    fun get(id: Long) = noteDict[id]
+
+    fun insertNote(description: String, date: Long, imageUri: String) {
+        coroutineScope.launch {
+            justInsertNote(description, date, imageUri)
+            onUpdate()
         }
     }
 
-    private fun insertNote(description: String, date: Long, imageUri: String) {
-        val newNote = noteDao!!.insert(description, date, imageUri)
-        noteDict[newNote.id] = newNote
+    private suspend fun onUpdate() {
+        val cachedNoteList = noteList
+        for (subscriber in subscribersOnUpdate) {
+            subscriber.setNoteList(cachedNoteList)
+        }
     }
 
-    fun get(id: Long) = noteDict[id]
+    private suspend fun justInsertNote(description: String, date: Long, imageUri: String) {
+        val newNote = withContext(Dispatchers.IO) { noteDao!!.insert(description, date, imageUri) }
+        noteDict[newNote.id] = newNote
+    }
 }

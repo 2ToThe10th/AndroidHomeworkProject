@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.transition.Fade
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.MainScope
 
 class MainActivity : AppCompatActivity(), NoteAdapter.Listener {
 

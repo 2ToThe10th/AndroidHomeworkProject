@@ -13,7 +13,7 @@ class NoteAdapter : RecyclerView.Adapter<NoteViewHolder>(), NoteRepository.Updat
     }
 
     private var noteList = emptyList<Note>()
-    override fun setNoteList(noteList: List<Note>) {
+    override suspend fun setNoteList(noteList: List<Note>) {
         this.noteList = noteList
         notifyDataSetChanged()
     }
