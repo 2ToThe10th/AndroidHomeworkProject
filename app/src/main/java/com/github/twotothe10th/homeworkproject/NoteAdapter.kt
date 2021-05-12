@@ -9,7 +9,7 @@ import com.github.twotothe10th.homeworkproject.db.NoteRepository
 
 class NoteAdapter : RecyclerView.Adapter<NoteViewHolder>(), NoteRepository.UpdateListener {
     interface Listener {
-        fun onNoteClick(id: Long, imageView: ImageView)
+        fun onNoteClick(id: Long, imageView: ImageView? = null)
     }
 
     private var noteList = emptyList<Note>()

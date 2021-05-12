@@ -1,18 +1,19 @@
 package com.github.twotothe10th.homeworkproject
 
-import android.graphics.Camera
+import android.net.Uri
 import android.os.Bundle
 import android.transition.Fade
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity(), NoteAdapter.Listener {
 
     private var detailedFragmentId: Int = 0
+    private val mainScope = MainScope() + CoroutineName("MainActivity")
 
-    override fun onNoteClick(id: Long, imageView: ImageView) {
+    override fun onNoteClick(id: Long, imageView: ImageView?) {
         if (supportFragmentManager.findFragmentByTag(NoteDetailedFragment.TAG) != null) {
             supportFragmentManager.popBackStack()
         }
@@ -22,12 +23,11 @@ class MainActivity : AppCompatActivity(), NoteAdapter.Listener {
         val transaction = supportFragmentManager
             .beginTransaction()
 
-        if (!resources.getBoolean(R.bool.is_pad)) {
+        if (imageView != null && !resources.getBoolean(R.bool.is_pad)) {
             noteDetailedFragment.sharedElementEnterTransition = DetailsTransition()
             noteDetailedFragment.sharedElementReturnTransition = DetailsTransition()
             transaction.addSharedElement(imageView, "image_detailed$id")
         }
-
         noteDetailedFragment.enterTransition = Fade()
 
         transaction.replace(
@@ -86,6 +86,27 @@ class MainActivity : AppCompatActivity(), NoteAdapter.Listener {
                 .addToBackStack(null)
                 .commit()
         }
+    }
+
+    fun onImageMade(imageUri: Uri) {
+        if (supportFragmentManager.findFragmentByTag(CameraFragment.TAG) != null) {
+            supportFragmentManager.popBackStack()
+        }
+
+        mainScope.launch {
+            val newId = (application as App).noteRepository.insertNote(
+                "description",
+                System.currentTimeMillis(),
+                imageUri.toString()
+            )
+            onNoteClick(newId)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        mainScope.cancel()
     }
 
     override fun onBackPressed() {

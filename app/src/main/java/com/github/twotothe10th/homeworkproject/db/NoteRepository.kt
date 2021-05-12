@@ -132,11 +132,10 @@ class NoteRepository {
 
     fun get(id: Long) = noteDict[id]
 
-    fun insertNote(description: String, date: Long, imageUri: String) {
-        coroutineScope.launch {
-            justInsertNote(description, date, imageUri)
-            onUpdate()
-        }
+    suspend fun insertNote(description: String, date: Long, imageUri: String): Long {
+        val newId = justInsertNote(description, date, imageUri)
+        onUpdate()
+        return newId
     }
 
     private suspend fun onUpdate() {
@@ -146,8 +145,9 @@ class NoteRepository {
         }
     }
 
-    private suspend fun justInsertNote(description: String, date: Long, imageUri: String) {
+    private suspend fun justInsertNote(description: String, date: Long, imageUri: String): Long {
         val newNote = withContext(Dispatchers.IO) { noteDao!!.insert(description, date, imageUri) }
         noteDict[newNote.id] = newNote
+        return newNote.id
     }
 }
