@@ -67,4 +67,6 @@ dependencies {
 
     // CameraX View class
     implementation 'androidx.camera:camera-view:1.0.0-alpha24'
+
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }

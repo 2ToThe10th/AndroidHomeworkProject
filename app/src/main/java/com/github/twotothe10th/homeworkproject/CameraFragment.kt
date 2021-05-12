@@ -284,13 +284,6 @@ class CameraFragment : Fragment() {
             // Get a stable reference of the modifiable image capture use case
             imageCapture?.let { imageCapture ->
 
-                // Setup image capture metadata
-                val metadata = Metadata().apply {
-
-                    // Mirror image when using the front camera
-                    isReversedHorizontal = lensFacing == CameraSelector.LENS_FACING_FRONT
-                }
-
                 val imageSaveName = ContentValues()
                 imageSaveName.put(
                     MediaStore.MediaColumns.DISPLAY_NAME,
@@ -303,9 +296,7 @@ class CameraFragment : Fragment() {
                     requireActivity().contentResolver,
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     imageSaveName
-                )
-                    .setMetadata(metadata)
-                    .build()
+                ).build()
 
                 // Setup image capture listener which is triggered after photo has been taken
                 imageCapture.takePicture(

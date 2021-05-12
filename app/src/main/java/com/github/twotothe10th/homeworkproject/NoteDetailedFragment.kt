@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.squareup.picasso.Picasso
 
 class NoteDetailedFragment : Fragment() {
 
@@ -41,7 +42,7 @@ class NoteDetailedFragment : Fragment() {
         val description = view.findViewById<TextView>(R.id.detailed_description)
         description.text = note.description
         val imageView = view.findViewById<ImageView>(R.id.detailed_photo)
-        imageView.setImageURI(Uri.parse(note.imageUri))
+        Picasso.get().load(Uri.parse(note.imageUri)).into(imageView)
         imageView.transitionName = "image_detailed$id"
     }
 }

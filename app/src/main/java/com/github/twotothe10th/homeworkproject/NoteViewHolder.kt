@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.github.twotothe10th.homeworkproject.db.Note
+import com.squareup.picasso.Picasso
 import java.util.Locale
 import java.util.Date
 
@@ -22,7 +23,7 @@ class NoteViewHolder(noteView: View, noteListener: NoteAdapter.Listener?) : View
         descriptionView.text = note.description
         dateView.text = dateFormatter.format(Date(note.date))
         id = note.id
-        imageView.setImageURI(Uri.parse(note.imageUri))
+        Picasso.get().load(Uri.parse(note.imageUri)).fit().centerCrop().into(imageView)
         imageView.transitionName = "image_list$id"
     }
 
