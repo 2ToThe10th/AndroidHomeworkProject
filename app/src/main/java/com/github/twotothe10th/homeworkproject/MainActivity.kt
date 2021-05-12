@@ -1,9 +1,11 @@
 package com.github.twotothe10th.homeworkproject
 
+import android.graphics.Camera
 import android.os.Bundle
 import android.transition.Fade
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import kotlinx.coroutines.MainScope
 
 class MainActivity : AppCompatActivity(), NoteAdapter.Listener {
@@ -33,6 +35,32 @@ class MainActivity : AppCompatActivity(), NoteAdapter.Listener {
             noteDetailedFragment,
             NoteDetailedFragment.TAG
         )
+            .addToBackStack(null)
+            .commit()
+    }
+
+    fun toPermissionCheckFragment() =
+        changeFragment(
+            CameraFragment.TAG,
+            PermissionCheckFragment.newInstance(),
+            PermissionCheckFragment.TAG
+        )
+
+    fun toCameraFragment() =
+        changeFragment(
+            PermissionCheckFragment.TAG,
+            CameraFragment.newInstance(),
+            CameraFragment.TAG
+        )
+
+    private fun changeFragment(fromTag: String, toFragment: Fragment, toTag: String) {
+        if (supportFragmentManager.findFragmentByTag(fromTag) != null) {
+            supportFragmentManager.popBackStack()
+        }
+
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.main_container, toFragment, toTag)
             .addToBackStack(null)
             .commit()
     }

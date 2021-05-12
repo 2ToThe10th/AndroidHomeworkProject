@@ -1,13 +1,13 @@
 package com.github.twotothe10th.homeworkproject
 
 import android.os.Bundle
-import android.transition.Fade
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlin.math.abs
 
 class NoteListFragment : Fragment() {
@@ -46,6 +46,11 @@ class NoteListFragment : Fragment() {
         recyclerView.adapter = noteListAdapter
 
         spSizeWas = resources.displayMetrics.scaledDensity
+
+        val createNoteButton = view.findViewById<FloatingActionButton>(R.id.create_note)
+        createNoteButton.setOnClickListener {
+            (activity as MainActivity).toPermissionCheckFragment()
+        }
     }
 
     override fun onStart() {
