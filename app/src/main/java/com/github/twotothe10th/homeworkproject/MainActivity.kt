@@ -3,9 +3,13 @@ package com.github.twotothe10th.homeworkproject
 import android.net.Uri
 import android.os.Bundle
 import android.transition.Fade
+import android.util.Log
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
 import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity(), NoteAdapter.Listener {
@@ -94,12 +98,27 @@ class MainActivity : AppCompatActivity(), NoteAdapter.Listener {
         }
 
         mainScope.launch {
-            val newId = (application as App).noteRepository.insertNote(
-                "description",
-                System.currentTimeMillis(),
-                imageUri.toString()
-            )
-            onNoteClick(newId)
+            val image =
+                withContext(Dispatchers.IO) {
+                    InputImage.fromFilePath(applicationContext, imageUri)
+                }
+            val recognizer = TextRecognition.getClient()
+            val result = recognizer.process(image)
+                .addOnSuccessListener { visionText ->
+                    mainScope.launch {
+                        val newId = (application as App).noteRepository.insertNote(
+                            visionText.text,
+                            System.currentTimeMillis(),
+                            imageUri.toString()
+                        )
+                        onNoteClick(newId)
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, e.toString())
+                    Toast.makeText(applicationContext, "text not recognized", Toast.LENGTH_LONG)
+                        .show()
+                }
         }
     }
 
@@ -115,5 +134,9 @@ class MainActivity : AppCompatActivity(), NoteAdapter.Listener {
         } else {
             super.onBackPressed()
         }
+    }
+
+    companion object {
+        val TAG = "MainActivity"
     }
 }
