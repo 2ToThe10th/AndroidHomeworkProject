@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Notes</string>
     <string name="photo_description">photo of note</string>
+    <string name="create_note_description">create note</string>
+    <string name="capture_button_alt">capture</string>
+    <string name="switch_camera_button_alt">switch camera</string>
 </resources>
